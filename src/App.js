@@ -1,67 +1,75 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Button, Input } from "reactstrap";
+import Item from "./components/Item/Index";
 import { init as firebaseInit } from "./firebase";
-class App extends Component {
+const uuidv4 = require("uuid/v4");
+class App extends PureComponent {
   constructor() {
     super();
-    firebaseInit();
     this.state = {
       listToDo: [],
       valueInput: ""
     };
+    this.firebase = firebaseInit();
+    this.firebase
+      .ref("listToDo")
+      .once("value")
+      .then(data => {
+        this.setState({
+          listToDo: data.val() ? data.val() : []
+        });
+      });
   }
   onChangeInput = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
+  removeTask = id => {
+    var listToDo = this.state.listToDo;
+    const index = listToDo.findIndex(el => el.id == id);
+    listToDo.splice(index, 1);
+    this.setState({
+      listToDo: listToDo
+    });
+    this.firebase.ref(`listToDo`).set(listToDo);
+    this.forceUpdate();
+  };
   addNewTask = () => {
     const { listToDo, valueInput } = this.state;
     let list = listToDo;
-    list.push({ content: valueInput, check: true });
+    list.unshift({ id: uuidv4(), content: valueInput, check: false });
+    this.firebase.ref(`listToDo`).set(list);
     this.setState({
       listToDo: list,
       valueInput: ""
     });
-    console.log(listToDo);
+    this.forceUpdate();
+  };
+
+  updateCheckTask = id => {
+    var listToDo = this.state.listToDo;
+    const index = listToDo.findIndex(el => el.id == id);
+    listToDo[index].check = !listToDo[index].check;
+    this.setState({
+      listToDo: listToDo
+    });
+    this.forceUpdate();
+    this.firebase.ref(`listToDo`).set(listToDo);
   };
   _renderList = () => {
-    return (
-      this,
-      this.state.listToDo.map((el, index) => (
-        <div
-          className={
-            el.check
-              ? "m-auto alert alert-success border"
-              : "m-auto alert alert-light border"
-          }
-          style={{ width: 500 }}
-          key={index}
-        >
-          <div className="">
-            <p>{el.content}</p>
-          </div>
-          <div className="d-flex justify-content-end">
-            <Button size="sm" color="secondary">
-              <i className="fas fa-edit" />
-            </Button>{" "}
-            <Button size="sm" color="primary">
-              {el.check ? (
-                <i class="fas fa-redo-alt" />
-              ) : (
-                <i className="fas fa-check" />
-              )}
-            </Button>{" "}
-            <Button size="sm" color="danger">
-              <i className="fas fa-times" />
-            </Button>{" "}
-          </div>
-        </div>
-      ))
-    );
+    return this.state.listToDo.map((el, index) => (
+      <Item
+        key={index}
+        updateCheckTask={this.updateCheckTask}
+        removeTask={this.removeTask}
+        el={el}
+        index={index}
+      />
+    ));
   };
   render() {
-    const { listToDo, valueInput } = this.state;
+    const { valueInput } = this.state;
     return (
       <div className="container">
         <div className="text-center">
