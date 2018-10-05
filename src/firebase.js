@@ -1,7 +1,6 @@
 import * as firebase from "firebase";
 
 export const init = () => {
-  const FIREBASE_PROPERTY = "list-todo-with-firebase";
   let config = {
     apiKey: "AIzaSyA297dSPusnVu2muDVSYM0qIAcKqmBbHks",
     authDomain: "list-todo-with-firebase.firebaseapp.com",

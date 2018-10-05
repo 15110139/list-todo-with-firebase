@@ -27,7 +27,7 @@ class App extends PureComponent {
   };
   removeTask = id => {
     var listToDo = this.state.listToDo;
-    const index = listToDo.findIndex(el => el.id == id);
+    const index = listToDo.findIndex(el => el.id === id);
     listToDo.splice(index, 1);
     this.setState({
       listToDo: listToDo
@@ -49,7 +49,7 @@ class App extends PureComponent {
 
   updateCheckTask = id => {
     var listToDo = this.state.listToDo;
-    const index = listToDo.findIndex(el => el.id == id);
+    const index = listToDo.findIndex(el => el.id ===id);
     listToDo[index].check = !listToDo[index].check;
     this.setState({
       listToDo: listToDo
@@ -60,7 +60,7 @@ class App extends PureComponent {
 
   updateContentTask = (id, newContent) => {
     var listToDo = this.state.listToDo;
-    const index = listToDo.findIndex(el => el.id == id);
+    const index = listToDo.findIndex(el => el.id === id);
     listToDo[index].content = newContent;
     this.setState({
       listToDo: listToDo
@@ -99,13 +99,12 @@ class App extends PureComponent {
               disabled={!valueInput ? true : false}
               onClick={this.addNewTask}
             >
-              <i class="fas fa-plus" /> Add Task
+              <i className="fas fa-plus" /> Add Task
             </Button>
           </div>
         </div>
 
         <hr />
-
         {this._renderList()}
       </div>
     );

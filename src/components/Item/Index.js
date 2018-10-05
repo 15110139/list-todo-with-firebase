@@ -29,7 +29,7 @@ class Item extends PureComponent {
     });
   };
   saveEdit = id => {
-    if(this.state.contentEdit!==""){
+    if (this.state.contentEdit !== "") {
       this.props.updateContenTask(id, this.state.contentEdit);
     }
     this.setState({
@@ -44,13 +44,12 @@ class Item extends PureComponent {
       <div
         className={
           el.check
-            ? "m-auto alert alert-success border"
-            : "m-auto alert alert-light border"
+            ? "col-lg-6 m-auto alert alert-success border"
+            : "col-lg-6 m-auto alert alert-light border"
         }
-        style={{ width: 500 }}
         index={index}
       >
-        <div className="">
+        <div className="row">
           {edit ? (
             <input
               type="text"
@@ -61,7 +60,9 @@ class Item extends PureComponent {
               autoFocus
             />
           ) : (
-            <p>{el.content}</p>
+            <div>
+              <p>{el.content}</p>
+            </div>
           )}
         </div>
         <div className="d-flex justify-content-end">
@@ -78,7 +79,7 @@ class Item extends PureComponent {
             color="primary"
           >
             {el.check ? (
-              <i class="fas fa-redo-alt" />
+              <i className="fas fa-redo-alt" />
             ) : (
               <i className="fas fa-check" />
             )}
