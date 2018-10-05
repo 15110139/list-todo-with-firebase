@@ -4,7 +4,8 @@ class Item extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      edit: false
+      edit: false,
+      contentEdit: this.props.el ? this.props.el.content : ""
     };
   }
 
@@ -15,7 +16,29 @@ class Item extends PureComponent {
     this.props.updateCheckTask(id);
     this.forceUpdate();
   };
+  editText = () => {
+    this.setState({
+      edit: !this.state.edit
+    });
+    this.forceUpdate();
+  };
+
+  onChangeInput = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  saveEdit = id => {
+    if(this.state.contentEdit!==""){
+      this.props.updateContenTask(id, this.state.contentEdit);
+    }
+    this.setState({
+      edit: !this.state.edit
+    });
+    this.forceUpdate();
+  };
   render() {
+    const { edit, contentEdit } = this.state;
     const { el, index } = this.props;
     return (
       <div
@@ -28,12 +51,25 @@ class Item extends PureComponent {
         index={index}
       >
         <div className="">
-          <p>{el.content}</p>
+          {edit ? (
+            <input
+              type="text"
+              value={contentEdit}
+              name="contentEdit"
+              onChange={this.onChangeInput}
+              onBlur={() => this.saveEdit(el.id)}
+              autoFocus
+            />
+          ) : (
+            <p>{el.content}</p>
+          )}
         </div>
         <div className="d-flex justify-content-end">
-          <Button size="sm" color="secondary">
-            <i className="fas fa-edit" />
-          </Button>{" "}
+          {!edit && (
+            <Button onClick={this.editText} size="sm" color="secondary">
+              <i className="fas fa-edit" />
+            </Button>
+          )}
           <Button
             onClick={() => {
               this.updateCheckTask(el.id);
@@ -46,7 +82,7 @@ class Item extends PureComponent {
             ) : (
               <i className="fas fa-check" />
             )}
-          </Button>{" "}
+          </Button>
           <Button
             onClick={() => {
               this.removeTask(el.id);
@@ -55,7 +91,7 @@ class Item extends PureComponent {
             color="danger"
           >
             <i className="fas fa-times" />
-          </Button>{" "}
+          </Button>
         </div>
       </div>
     );

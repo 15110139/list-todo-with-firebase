@@ -57,12 +57,24 @@ class App extends PureComponent {
     this.forceUpdate();
     this.firebase.ref(`listToDo`).set(listToDo);
   };
+
+  updateContentTask = (id, newContent) => {
+    var listToDo = this.state.listToDo;
+    const index = listToDo.findIndex(el => el.id == id);
+    listToDo[index].content = newContent;
+    this.setState({
+      listToDo: listToDo
+    });
+    this.forceUpdate();
+    this.firebase.ref(`listToDo`).set(listToDo);
+  };
   _renderList = () => {
     return this.state.listToDo.map((el, index) => (
       <Item
         key={index}
         updateCheckTask={this.updateCheckTask}
         removeTask={this.removeTask}
+        updateContenTask={this.updateContentTask}
         el={el}
         index={index}
       />
