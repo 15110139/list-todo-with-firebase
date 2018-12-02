@@ -20,26 +20,35 @@ class App extends PureComponent {
         });
       });
   }
+  // sữ lí sữ kiện khi ô input có sữ thây đổi.
   onChangeInput = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
+
+  // sữ lí sự kiện xóa 1 task
   removeTask = id => {
     var listToDo = this.state.listToDo;
+    // xóa phần tử trong list task hiện tại
     const index = listToDo.findIndex(el => el.id === id);
     listToDo.splice(index, 1);
     this.setState({
       listToDo: listToDo
     });
+    // update dữ liệu lên firebase
     this.firebase.ref(`listToDo`).set(listToDo);
     this.forceUpdate();
   };
   addNewTask = () => {
     const { listToDo, valueInput } = this.state;
     let list = listToDo;
+    // thêm task mới vào list task
     list.unshift({ id: uuidv4(), content: valueInput, check: false });
+    // update dữ liệu lên firebase
+
     this.firebase.ref(`listToDo`).set(list);
+    // rest lai ô input
     this.setState({
       listToDo: list,
       valueInput: ""
@@ -49,12 +58,14 @@ class App extends PureComponent {
 
   updateCheckTask = id => {
     var listToDo = this.state.listToDo;
-    const index = listToDo.findIndex(el => el.id ===id);
+    // update thông tin task được chọn
+    const index = listToDo.findIndex(el => el.id === id);
     listToDo[index].check = !listToDo[index].check;
     this.setState({
       listToDo: listToDo
     });
     this.forceUpdate();
+    // update dữ liệu lên firebase
     this.firebase.ref(`listToDo`).set(listToDo);
   };
 
@@ -68,6 +79,8 @@ class App extends PureComponent {
     this.forceUpdate();
     this.firebase.ref(`listToDo`).set(listToDo);
   };
+
+  // show list task
   _renderList = () => {
     return this.state.listToDo.map((el, index) => (
       <Item
@@ -80,6 +93,8 @@ class App extends PureComponent {
       />
     ));
   };
+
+  // render giao diện list to do
   render() {
     const { valueInput } = this.state;
     return (
@@ -87,12 +102,14 @@ class App extends PureComponent {
         <div className="text-center">
           <h1>ToDo App</h1>
           <div className="d-inline-flex">
+            {/* ô input */}
             <Input
               value={valueInput}
               name="valueInput"
               onChange={this.onChangeInput}
               placeholder="Enter name task"
             />
+            {/* button thêm task */}
             <Button
               outline
               color="secondary"
@@ -105,6 +122,7 @@ class App extends PureComponent {
         </div>
 
         <hr />
+        {/* render list task */}
         {this._renderList()}
       </div>
     );

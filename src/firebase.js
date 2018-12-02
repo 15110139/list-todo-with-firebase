@@ -1,3 +1,5 @@
+
+// init fire base
 import * as firebase from "firebase";
 
 export const init = () => {
