@@ -8,26 +8,29 @@ class Item extends PureComponent {
       contentEdit: this.props.el ? this.props.el.content : ""
     };
   }
-
+  // sữ lý sự hiện remove task
   removeTask = id => {
     this.props.removeTask(id);
   };
+  // sữ lý sự kiện update task
   updateCheckTask = id => {
     this.props.updateCheckTask(id);
     this.forceUpdate();
   };
+  // sữ lý sự kiện nhập nội dung o input
   editText = () => {
     this.setState({
       edit: !this.state.edit
     });
     this.forceUpdate();
   };
-
+  // bắt sự kiện change input task
   onChangeInput = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
+  // sữ lý sữ kiện lưu nôi dung sau khi sữa
   saveEdit = id => {
     if (this.state.contentEdit !== "") {
       this.props.updateContenTask(id, this.state.contentEdit);
@@ -51,6 +54,7 @@ class Item extends PureComponent {
       >
         <div className="row">
           {edit ? (
+            /* ô input sữ nỗi dung */
             <input
               type="text"
               value={contentEdit}
@@ -65,6 +69,7 @@ class Item extends PureComponent {
             </div>
           )}
         </div>
+        {/* cum btn check sữa xóa */}
         <div className="d-flex justify-content-end">
           {!edit && (
             <Button onClick={this.editText} size="sm" color="secondary">
